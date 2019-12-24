@@ -1,14 +1,15 @@
 package com.zsg.springboot.config;
 
+import com.zsg.springboot.component.LoginHandlerInterceptor;
 import com.zsg.springboot.component.MyLocaleReolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import java.nio.file.Watchable;
 
 @EnableWebMvc
 @Configuration
@@ -26,7 +27,13 @@ public class MyMcvConfig extends WebMvcConfigurerAdapter{
             public void addViewControllers(ViewControllerRegistry registry) {
                 registry.addViewController("/").setViewName("login");
                 registry.addViewController("/index.html").setViewName("login");
-                registry.addViewController("main.html").setViewName("dashboard");
+                registry.addViewController("/main.html").setViewName("dashboard");
+      //          registry.addViewController("/static/**");
+            }
+
+            @Override
+            public void addInterceptors(InterceptorRegistry registry) {
+                registry.addInterceptor(new LoginHandlerInterceptor()).addPathPatterns("/**").excludePathPatterns("/index.html","/","/user/login");
             }
         };
         return  adapter;
